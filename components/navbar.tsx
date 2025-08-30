@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import { useAuth } from "@/hooks/use-auth"
 import Link from "next/link"
 import { motion, AnimatePresence } from "framer-motion"
 import { Button } from "@/components/ui/button"
@@ -27,6 +28,9 @@ export function Navbar() {
     { href: "/contact", label: "Contact" },
   ]
 
+  const { user, logout, loading } = useAuth();
+
+  console.log("useAuth:", user);
   return (
     <motion.nav
       className={cn(
@@ -44,17 +48,18 @@ export function Navbar() {
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-2">
             <motion.div
-              className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center"
+              className="w-8 h-8 bg-gradient-to-tr from-primary to-gray-400 rounded-md flex items-center justify-center shadow-sm border border-primary/40"
               whileHover={{ scale: 1.1, rotate: 5 }}
               transition={{ type: "spring", stiffness: 400, damping: 10 }}
             >
-              <span className="text-primary-foreground font-bold text-lg">S</span>
+              <span className="text-primary-foreground font-extrabold text-base tracking-tight">NC</span>
             </motion.div>
             <motion.span
-              className={cn("font-bold text-xl transition-colors", isScrolled ? "text-foreground" : "text-black")}
+              className={cn("ml-1 flex flex-col leading-tight font-semibold text-base md:text-lg tracking-tight transition-colors", isScrolled ? "text-foreground" : "text-black")}
               whileHover={{ scale: 1.05 }}
             >
-              StoneWorks
+              <span className="block">new crescent</span>
+              <span className="block text-primary font-bold">Granite &amp; Quartz</span>
             </motion.span>
           </Link>
 
@@ -82,21 +87,39 @@ export function Navbar() {
                 </Link>
               </motion.div>
             ))}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.6 }}
-            >
-              <Link href="/auth/login">
+            {!loading && user ? (
+              <div className="flex items-center space-x-3">
+                <Link href="/dashboard">
+                  <span className="font-medium text-sm text-primary-foreground bg-primary px-3 py-1 rounded-full cursor-pointer hover:bg-primary/80 transition">
+                    {user.displayName ? user.displayName : user.email}
+                  </span>
+                </Link>
                 <Button
-                  variant="default"
+                  variant="outline"
                   size="sm"
-                  className="transform hover:scale-105 transition-all duration-300 hover:shadow-lg"
+                  className="hover:bg-red-100 hover:text-red-600 border-red-200"
+                  onClick={logout}
                 >
-                  Login
+                  Logout
                 </Button>
-              </Link>
-            </motion.div>
+              </div>
+            ) : (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.6 }}
+              >
+                <Link href="/auth/login">
+                  <Button
+                    variant="default"
+                    size="sm"
+                    className="transform hover:scale-105 transition-all duration-300 hover:shadow-lg"
+                  >
+                    Login
+                  </Button>
+                </Link>
+              </motion.div>
+            )}
           </div>
 
           {/* Mobile Menu Button */}
@@ -161,17 +184,44 @@ export function Navbar() {
                     </Link>
                   </motion.div>
                 ))}
-                <motion.div
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: navLinks.length * 0.1 }}
-                >
-                  <Link href="/auth/login" onClick={() => setIsMobileMenuOpen(false)}>
-                    <Button variant="default" size="sm" className="w-fit">
-                      Login
-                    </Button>
-                  </Link>
-                </motion.div>
+                {!loading && user ? (
+                  <motion.div
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: navLinks.length * 0.1 }}
+                  >
+                    <div className="flex items-center space-x-3">
+                      <Link href="/dashboard">
+                        <span className="font-medium text-sm text-primary-foreground bg-primary px-3 py-1 rounded-full cursor-pointer hover:bg-primary/80 transition">
+                          {user.displayName ? user.displayName : user.email}
+                        </span>
+                      </Link>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="hover:bg-red-100 hover:text-red-600 border-red-200"
+                        onClick={() => {
+                          logout();
+                          setIsMobileMenuOpen(false);
+                        }}
+                      >
+                        Logout
+                      </Button>
+                    </div>
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: navLinks.length * 0.1 }}
+                  >
+                    <Link href="/auth/login" onClick={() => setIsMobileMenuOpen(false)}>
+                      <Button variant="default" size="sm" className="w-fit">
+                        Login
+                      </Button>
+                    </Link>
+                  </motion.div>
+                )}
               </div>
             </motion.div>
           )}

@@ -8,7 +8,8 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import Link from "next/link"
-import { signInWithEmailAndPassword } from "@/lib/firebase"
+import { signInWithEmailAndPassword } from "firebase/auth"
+import { auth } from "@/lib/firebaseConfig"
 import { useRouter } from "next/navigation"
 
 export default function LoginPage() {
@@ -24,10 +25,8 @@ export default function LoginPage() {
     setError("")
 
     try {
-      const result = await signInWithEmailAndPassword(email, password)
-      if (result.success) {
-        router.push("/gallery")
-      }
+  await signInWithEmailAndPassword(auth, email, password)
+  router.push("/gallery")
     } catch (err) {
       setError(err instanceof Error ? err.message : "Login failed")
     } finally {

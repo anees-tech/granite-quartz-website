@@ -9,13 +9,16 @@ export function Footer() {
           {/* Company Info */}
           <div className="space-y-4">
             <div className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-                <span className="text-primary-foreground font-bold text-lg">S</span>
+              <div className="w-8 h-8 bg-gradient-to-tr from-primary to-gray-400 rounded-md flex items-center justify-center shadow-sm border border-primary/40">
+                <span className="text-primary-foreground font-extrabold text-base tracking-tight">NC</span>
               </div>
-              <span className="font-bold text-xl">StoneWorks</span>
+              <span className="ml-1 flex flex-col leading-tight font-semibold text-base md:text-lg tracking-tight">
+                <span className="block">new crescent</span>
+                <span className="block text-primary font-bold">Granite &amp; Quartz</span>
+              </span>
             </div>
             <p className="text-muted-foreground">
-              Premium granite and quartz materials for your dream spaces. Quality craftsmanship since 1995.
+              Elevating spaces with premium granite &amp; quartz. Crafting excellence for modern living.
             </p>
             <div className="flex space-x-4">
               <Facebook className="w-5 h-5 text-muted-foreground hover:text-primary cursor-pointer transition-colors" />
@@ -75,8 +78,8 @@ export function Footer() {
         </div>
 
         <div className="border-t border-border mt-8 pt-8 text-center">
-          <p className="text-muted-foreground">
-            © 2025 StoneWorks. All rights reserved. | Privacy Policy | Terms of Service
+          <p className="text-muted-foreground text-base md:text-lg font-semibold">
+            © {new Date().getFullYear()} new crescent Granite &amp; Quartz Corporation. All rights reserved.
           </p>
         </div>
       </div>

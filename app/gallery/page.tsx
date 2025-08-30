@@ -15,7 +15,7 @@ export default function GalleryPage() {
       title: "Modern Kitchen Renovation",
       category: "Kitchen",
       material: "Calacatta Quartz",
-      image: "/modern-white-quartz-kitchen-countertop.png",
+      image: "/images/IMG_4769.JPG",
       description: "Stunning white quartz countertops with waterfall edge and seamless integration",
     },
     {
@@ -23,7 +23,7 @@ export default function GalleryPage() {
       title: "Luxury Master Bathroom",
       category: "Bathroom",
       material: "Carrara Marble",
-      image: "/luxury-marble-bathroom-vanity.png",
+      image: "/images/IMG_5102.PNG",
       description: "Elegant marble vanity with custom backsplash and precision-cut edges",
     },
     {
@@ -31,7 +31,7 @@ export default function GalleryPage() {
       title: "Commercial Office Lobby",
       category: "Commercial",
       material: "Black Galaxy Granite",
-      image: "/black-granite-commercial-reception-desk.png",
+      image: "/images/IMG_5103.PNG",
       description: "Sophisticated granite reception desk with dramatic veining and polished finish",
     },
     {
@@ -39,7 +39,7 @@ export default function GalleryPage() {
       title: "Outdoor Kitchen Paradise",
       category: "Outdoor",
       material: "Steel Grey Granite",
-      image: "/outdoor-granite-kitchen-countertop.png",
+      image: "/images/IMG_5104.PNG",
       description: "Weather-resistant granite perfect for outdoor entertaining and cooking",
     },
     {
@@ -47,7 +47,7 @@ export default function GalleryPage() {
       title: "Contemporary Fireplace",
       category: "Living",
       material: "Absolute Black Granite",
-      image: "/black-granite-fireplace-surround.png",
+      image: "/images/IMG_5105.PNG",
       description: "Sleek granite fireplace surround creating a stunning focal point",
     },
     {
@@ -55,7 +55,7 @@ export default function GalleryPage() {
       title: "Restaurant Bar Top",
       category: "Commercial",
       material: "Emperador Brown Marble",
-      image: "/brown-marble-restaurant-bar-counter.png",
+      image: "/images/IMG_5106.PNG",
       description: "Rich marble bar top with live edge detail and premium finish",
     },
     {
@@ -63,7 +63,7 @@ export default function GalleryPage() {
       title: "Executive Office Desk",
       category: "Commercial",
       material: "White Ice Granite",
-      image: "/modern-granite-kitchen-countertop.png",
+      image: "/images/IMG_5107.PNG",
       description: "Premium granite desk surface with integrated cable management",
     },
     {
@@ -71,7 +71,7 @@ export default function GalleryPage() {
       title: "Spa Bathroom Retreat",
       category: "Bathroom",
       material: "Travertine",
-      image: "/luxury-quartz-bathroom-vanity.png",
+      image: "/images/IMG_5108.PNG",
       description: "Luxurious travertine surfaces creating a serene spa-like atmosphere",
     },
     {
@@ -79,7 +79,7 @@ export default function GalleryPage() {
       title: "Gourmet Kitchen Island",
       category: "Kitchen",
       material: "Nero Marquina Marble",
-      image: "/commercial-granite-reception-desk.png",
+      image: "/images/IMG_5110.PNG",
       description: "Dramatic black marble island with gold veining and waterfall edges",
     },
   ]

@@ -8,7 +8,8 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import Link from "next/link"
-import { createUserWithEmailAndPassword } from "@/lib/firebase"
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth"
+import { auth } from "@/lib/firebaseConfig"
 import { useRouter } from "next/navigation"
 
 export default function SignupPage() {
@@ -34,10 +35,11 @@ export default function SignupPage() {
     }
 
     try {
-      const result = await createUserWithEmailAndPassword(formData.email, formData.password, formData.name)
-      if (result.success) {
-        router.push("/gallery")
+      const userCredential = await createUserWithEmailAndPassword(auth, formData.email, formData.password)
+      if (auth.currentUser) {
+        await updateProfile(auth.currentUser, { displayName: formData.name })
       }
+      router.push("/gallery")
     } catch (err) {
       setError(err instanceof Error ? err.message : "Signup failed")
     } finally {
