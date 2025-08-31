@@ -6,7 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Send, MessageCircle, AlertCircle, CheckCircle, XCircle, Clock } from "lucide-react";
-import { addReview, getPendingReviews, type Review } from "@/lib/gallery";
+import { addReview, getApprovedReviews, type Review } from "@/lib/gallery";
 import { useAuthContext } from "@/components/auth-provider";
 import { cn } from "@/lib/utils";
 
@@ -26,7 +26,7 @@ export function ReviewSection({ galleryId, className }: ReviewSectionProps) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const fetchedReviews = await getPendingReviews(galleryId);
+        const fetchedReviews = await getApprovedReviews(galleryId);
         setReviews(fetchedReviews);
       } catch (error) {
         console.error("Failed to fetch review data:", error);
@@ -42,10 +42,8 @@ export function ReviewSection({ galleryId, className }: ReviewSectionProps) {
     if (!newReview.trim() || !currentUser || rating < 1) return;
 
     setIsSubmitting(true);
-    const approvedReviews = reviews.filter(r => r.status === "approved");
-    const averageRating = approvedReviews.length > 0 ? (approvedReviews.reduce((sum, r) => sum + (r.rating || 0), 0) / approvedReviews.length) : 0;
     try {
-      const review = await addReview({
+      await addReview({
         galleryId,
         userId: currentUser.uid,
         userEmail: currentUser?.email ?? "",
@@ -53,9 +51,9 @@ export function ReviewSection({ galleryId, className }: ReviewSectionProps) {
         rating,
         status: "pending",
       });
-      setReviews(prev => [review, ...prev]);
       setNewReview("");
       setRating(0);
+      // Optionally, show a message: "Your review is pending approval."
     } catch (error) {
       console.error("Failed to add review:", error);
     } finally {
@@ -112,9 +110,8 @@ export function ReviewSection({ galleryId, className }: ReviewSectionProps) {
     );
   }
 
-  // Calculate average rating (for approved reviews)
-  const approvedReviews = reviews.filter(r => r.status === "approved");
-  const averageRating = approvedReviews.length > 0 ? (approvedReviews.reduce((sum: number, r) => sum + (r.rating || 0), 0) / approvedReviews.length) : 0;
+  // Calculate average rating (all reviews are approved)
+  const averageRating = reviews.length > 0 ? (reviews.reduce((sum: number, r) => sum + (r.rating || 0), 0) / reviews.length) : 0;
 
   return (
     <Card className={cn("animate-in fade-in slide-in-from-bottom duration-500 border-2 border-primary/30 shadow-xl bg-white/90", className)}>

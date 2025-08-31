@@ -1,3 +1,59 @@
+import { db } from "./firebaseConfig";
+import { collection, addDoc, getDocs, doc, getDoc, query, where, orderBy, updateDoc, deleteDoc } from "firebase/firestore";
+
+export interface Review {
+	id: string;
+	galleryId: string;
+	userId: string;
+	userEmail: string;
+	reviewText: string;
+	rating: number;
+	status: "pending" | "approved" | "rejected";
+	createdAt: string;
+}
+
+export interface GalleryItem {
+	id: string;
+	title: string;
+	category: string;
+	material: string;
+	mainImageUrl: string;
+	description: string;
+	createdAt: string;
+	images: {
+		[key: string]: {
+			url: string;
+			cloudinaryPublicId: string;
+			isMain: boolean;
+		};
+	};
+	client?: string;
+	location?: string;
+	specifications?: {
+		[key: string]: string;
+	};
+	averageRating?: number;
+	reviewCount?: number;
+}
+
+// Delete a review by ID
+export async function deleteReview(reviewId: string): Promise<void> {
+	const reviewRef = doc(db, "reviews", reviewId);
+	await deleteDoc(reviewRef);
+}
+
+// Update a review (sets status to 'pending' on edit)
+export async function updateReview(reviewId: string, data: Partial<Omit<Review, 'id' | 'userId' | 'galleryId' | 'createdAt'>>): Promise<void> {
+	const reviewRef = doc(db, "reviews", reviewId);
+	await updateDoc(reviewRef, { ...data, status: 'pending' });
+}
+// Get all reviews for a specific user
+export async function getUserReviews(userId: string): Promise<Review[]> {
+	const reviewsRef = collection(db, "reviews");
+	const q = query(reviewsRef, where("userId", "==", userId), orderBy("createdAt", "desc"));
+	const querySnapshot = await getDocs(q);
+	return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as Review[];
+}
 // Get reviews for a gallery item by status
 export async function getApprovedReviews(galleryId: string): Promise<Review[]> {
 	const reviewsRef = collection(db, "reviews");
@@ -20,45 +76,6 @@ export async function getPendingReviews(galleryId: string): Promise<Review[]> {
 	const querySnapshot = await getDocs(q);
 	return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as Review[];
 }
-export interface Review {
-	id: string;
-	galleryId: string;
-	userId: string;
-	userEmail: string;
-	reviewText: string;
-	rating: number;
-	status: "pending" | "approved" | "rejected";
-	createdAt: string;
-}
-import { db } from "./firebaseConfig";
-import { collection, addDoc, getDocs, doc, getDoc, query, where, orderBy, updateDoc } from "firebase/firestore";
-
-export interface GalleryItem {
-	id: string;
-	title: string;
-	category: string;
-	material: string;
-	mainImageUrl: string;
-	description: string;
-	createdAt: string;
-	images: {
-		[key: string]: {
-			url: string;
-			cloudinaryPublicId: string;
-			isMain: boolean;
-		};
-	};
-	client?: string;
-	location?: string;
-	completedDate?: string;
-	specifications?: {
-		[key: string]: string;
-	};
-	averageRating?: number;
-	reviewCount?: number;
-}
-
-
 
 // Add a new gallery item
 export async function addGalleryItem(item: Omit<GalleryItem, "id">): Promise<GalleryItem> {
