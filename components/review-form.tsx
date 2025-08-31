@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
@@ -32,7 +32,17 @@ export function ReviewForm({ galleryId, onReviewAdded }: ReviewFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [selectedRating, setSelectedRating] = useState(0)
   const [hoverRating, setHoverRating] = useState(0)
-  const currentUser = getCurrentUser()
+  const [currentUser, setCurrentUser] = useState<any>(null)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const user = await getCurrentUser()
+      setCurrentUser(user)
+      setLoading(false)
+    }
+    fetchUser()
+  }, [])
 
   const {
     register,
@@ -44,24 +54,22 @@ export function ReviewForm({ galleryId, onReviewAdded }: ReviewFormProps) {
     resolver: zodResolver(reviewSchema),
   })
 
-  const onSubmit = async (data: ReviewFormData) => {
+    const onSubmit = async (data: ReviewFormData) => {
     if (!currentUser) return
 
     setIsSubmitting(true)
     try {
-      const result = await addReview({
+      const review = await addReview({
         userId: currentUser.uid,
-        userName: currentUser.displayName,
+        userName: currentUser.displayName || "Anonymous",
         galleryId,
         rating: data.rating,
         comment: data.comment,
       })
 
-      if (result.success) {
-        onReviewAdded(result.review)
-        reset()
-        setSelectedRating(0)
-      }
+      onReviewAdded(review)
+      reset()
+      setSelectedRating(0)
     } catch (error) {
       console.error("Failed to submit review:", error)
     } finally {
@@ -72,6 +80,17 @@ export function ReviewForm({ galleryId, onReviewAdded }: ReviewFormProps) {
   const handleRatingClick = (rating: number) => {
     setSelectedRating(rating)
     setValue("rating", rating)
+  }
+
+  if (loading) {
+    return (
+      <Card className="animate-in fade-in slide-in-from-bottom duration-500">
+        <CardContent className="p-8 text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-muted-foreground">Loading...</p>
+        </CardContent>
+      </Card>
+    )
   }
 
   if (!currentUser) {

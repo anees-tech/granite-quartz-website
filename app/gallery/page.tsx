@@ -1,91 +1,16 @@
-"use client"
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import { Hero } from "@/components/hero";
+import { Badge } from "@/components/ui/badge";
+import GalleryGrid from "@/components/ui/gallery-grid";
+import { getGalleryItems } from "@/lib/gallery";
 
-import { Button } from "@/components/ui/button"
-
-import Link from "next/link"
-
-import { Hero } from "@/components/hero"
-import { Badge } from "@/components/ui/badge"
-import { GalleryGrid } from "@/components/gallery-grid"
-
-export default function GalleryPage() {
-  const galleryItems = [
-    {
-      id: 1,
-      title: "Modern Kitchen Renovation",
-      category: "Kitchen",
-      material: "Calacatta Quartz",
-      image: "/images/IMG_4769.JPG",
-      description: "Stunning white quartz countertops with waterfall edge and seamless integration",
-    },
-    {
-      id: 2,
-      title: "Luxury Master Bathroom",
-      category: "Bathroom",
-      material: "Carrara Marble",
-      image: "/images/IMG_5102.PNG",
-      description: "Elegant marble vanity with custom backsplash and precision-cut edges",
-    },
-    {
-      id: 3,
-      title: "Commercial Office Lobby",
-      category: "Commercial",
-      material: "Black Galaxy Granite",
-      image: "/images/IMG_5103.PNG",
-      description: "Sophisticated granite reception desk with dramatic veining and polished finish",
-    },
-    {
-      id: 4,
-      title: "Outdoor Kitchen Paradise",
-      category: "Outdoor",
-      material: "Steel Grey Granite",
-      image: "/images/IMG_5104.PNG",
-      description: "Weather-resistant granite perfect for outdoor entertaining and cooking",
-    },
-    {
-      id: 5,
-      title: "Contemporary Fireplace",
-      category: "Living",
-      material: "Absolute Black Granite",
-      image: "/images/IMG_5105.PNG",
-      description: "Sleek granite fireplace surround creating a stunning focal point",
-    },
-    {
-      id: 6,
-      title: "Restaurant Bar Top",
-      category: "Commercial",
-      material: "Emperador Brown Marble",
-      image: "/images/IMG_5106.PNG",
-      description: "Rich marble bar top with live edge detail and premium finish",
-    },
-    {
-      id: 7,
-      title: "Executive Office Desk",
-      category: "Commercial",
-      material: "White Ice Granite",
-      image: "/images/IMG_5107.PNG",
-      description: "Premium granite desk surface with integrated cable management",
-    },
-    {
-      id: 8,
-      title: "Spa Bathroom Retreat",
-      category: "Bathroom",
-      material: "Travertine",
-      image: "/images/IMG_5108.PNG",
-      description: "Luxurious travertine surfaces creating a serene spa-like atmosphere",
-    },
-    {
-      id: 9,
-      title: "Gourmet Kitchen Island",
-      category: "Kitchen",
-      material: "Nero Marquina Marble",
-      image: "/images/IMG_5110.PNG",
-      description: "Dramatic black marble island with gold veining and waterfall edges",
-    },
-  ]
-
-  const categories = ["All", "Kitchen", "Bathroom", "Commercial", "Outdoor", "Living"]
-
+export default async function GalleryPage() {
+  const items = await getGalleryItems();
+  
+  console.log("📄 Gallery Page - Items received:", items);
+  console.log("📄 Gallery Page - Items count:", items.length);
+  
   return (
     <div className="min-h-screen">
       {/* Hero Section with enhanced animations */}
@@ -107,8 +32,7 @@ export default function GalleryPage() {
               Featured Projects
             </h2>
           </div>
-
-          <GalleryGrid items={galleryItems} categories={categories} />
+          <GalleryGrid items={items} />
         </div>
       </section>
 
@@ -138,5 +62,5 @@ export default function GalleryPage() {
         </div>
       </section>
     </div>
-  )
+  );
 }

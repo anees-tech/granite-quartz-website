@@ -1,0 +1,38 @@
+rules_version = '2';
+
+service cloud.firestore {
+	match /databases/{database}/documents {
+		// Gallery collection rules
+		match /gallery/{document} {
+			// Everyone can read gallery items
+			allow read: if true;
+
+			// Only specific admin user can write/delete gallery items
+			allow write, delete: if request.auth != null && request.auth.uid == "2Axi53MynLVjcCQ5Pqu7yWpFtil1";
+		}
+
+		// Reviews collection rules
+		match /reviews/{document} {
+			// Everyone can read reviews
+			allow read: if true;
+
+			// Authenticated users can create their own reviews
+			allow create: if request.auth != null &&
+				request.auth.uid == request.resource.data.userId;
+
+			// Users can update their own reviews (but not status)
+			allow update: if request.auth != null &&
+				request.auth.uid == resource.data.userId &&
+				request.resource.data.diff(resource.data).affectedKeys().hasOnly(['reviewText', 'rating']);
+
+			// Admin can update review status
+			allow update: if request.auth != null &&
+				request.auth.uid == "2Axi53MynLVjcCQ5Pqu7yWpFtil1";
+
+			// Users can delete their own reviews, admin can delete any
+			allow delete: if request.auth != null &&
+				(request.auth.uid == resource.data.userId ||
+				 request.auth.uid == "2Axi53MynLVjcCQ5Pqu7yWpFtil1");
+		}
+	}
+}
