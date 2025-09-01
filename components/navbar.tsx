@@ -88,12 +88,17 @@ export function Navbar() {
               </motion.div>
             ))}
             {!loading && user ? (
-              <div className="flex items-center space-x-3">
-                <Link href="/dashboard">
-                  <span className="font-medium text-sm text-primary-foreground bg-primary px-3 py-1 rounded-full cursor-pointer hover:bg-primary/80 transition">
-                    {user.displayName ? user.displayName : user.email}
+                <div className="flex items-center">
+                <div className="flex flex-col items-start bg-muted/60 border border-border rounded-lg px-4 py-2 mr-4 shadow-sm">
+                  <Link href="/dashboard">
+                  <span className="font-medium text-sm text-primary-foreground bg-primary px-3 py-1 rounded-full cursor-pointer hover:bg-primary/80 transition mb-1">
+                    Dashboard
                   </span>
-                </Link>
+                  </Link>
+                  <span className="font-medium text-xs text-foreground">
+                  {user.displayName ? user.displayName : user.email}
+                  </span>
+                </div>
                 <Button
                   variant="outline"
                   size="sm"
@@ -102,7 +107,7 @@ export function Navbar() {
                 >
                   Logout
                 </Button>
-              </div>
+                </div>
             ) : (
               <motion.div
                 initial={{ opacity: 0, scale: 0.8 }}

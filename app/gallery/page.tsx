@@ -4,6 +4,34 @@ import { Hero } from "@/components/hero";
 import { Badge } from "@/components/ui/badge";
 import GalleryGrid from "@/components/ui/gallery-grid";
 import { getGalleryItems } from "@/lib/gallery";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Gallery - Stone Projects & Installations",
+  description: "Browse our stunning portfolio of granite and quartz installations. Kitchen countertops, bathroom vanities, commercial projects and custom stone work from Calgary's premier stone fabricators.",
+  keywords: [
+    "granite gallery",
+    "quartz projects", 
+    "stone installation portfolio",
+    "kitchen countertop gallery",
+    "bathroom vanity projects",
+    "Calgary stone work",
+    "granite countertop examples",
+    "quartz installation photos"
+  ],
+  openGraph: {
+    title: "Gallery - Stone Projects & Installations | Premium Granite & Quartz",
+    description: "Browse our stunning portfolio of granite and quartz installations. Kitchen countertops, bathroom vanities, and custom stone work.",
+    images: [
+      {
+        url: "/granite-showroom-with-stone-samples.png",
+        width: 1200,
+        height: 630,
+        alt: "Stone Installation Gallery",
+      },
+    ],
+  },
+};
 
 export default async function GalleryPage() {
   const items = await getGalleryItems();

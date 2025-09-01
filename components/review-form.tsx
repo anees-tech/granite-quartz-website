@@ -59,12 +59,14 @@ export function ReviewForm({ galleryId, onReviewAdded }: ReviewFormProps) {
 
     setIsSubmitting(true)
     try {
+
       const review = await addReview({
         userId: currentUser.uid,
-        userName: currentUser.displayName || "Anonymous",
+        userEmail: currentUser.email || "anonymous@example.com",
         galleryId,
         rating: data.rating,
-        comment: data.comment,
+        reviewText: data.comment,
+        status: "pending",
       })
 
       onReviewAdded(review)
