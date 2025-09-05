@@ -32,7 +32,7 @@ export default function ContactPage() {
 
   // Initialize EmailJS
   useEffect(() => {
-    emailjs.init('rxu0Ie8ITnC1L3OmC')
+    emailjs.init(process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY!)
   }, [])
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -45,10 +45,10 @@ export default function ContactPage() {
 
       // Send email using EmailJS
       await emailjs.sendForm(
-        'service_52bbftd', // Your service ID
-        'template_bwq0jjb', // Your template ID
+        process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID!, // Your service ID
+        process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID!, // Your template ID
         formRef.current,
-        'rxu0Ie8ITnC1L3OmC' // Your public key
+        process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY! // Your public key
       )
 
       setSubmitStatus('success')
@@ -474,17 +474,17 @@ export default function ContactPage() {
 
           <Card className="overflow-hidden shadow-2xl border-0">
             <div className="relative h-96">
-              <iframe 
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d151746.81728951394!2d-113.51334879750496!3d53.53912822434146!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x53a0224580deff23%3A0x411fa00c4af6155d!2sEdmonton%2C%20AB%2C%20Canada!5e0!3m2!1sen!2s!4v1757032540426!5m2!1sen!2s" 
-                width="100%" 
-                height="100%" 
+              <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d151746.81728951394!2d-113.51334879750496!3d53.53912822434146!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x53a0224580deff23%3A0x411fa00c4af6155d!2sEdmonton%2C%20AB%2C%20Canada!5e0!3m2!1sen!2s!4v1757032540426!5m2!1sen!2s"
+                width="100%"
+                height="100%"
                 style={{ border: 0 }}
                 allowFullScreen
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
                 className="rounded-lg"
               />
-              
+
               {/* Overlay Info Card */}
               <div className="absolute bottom-4 left-4 right-4 bg-background/95 backdrop-blur-sm rounded-lg p-4 shadow-lg border">
                 <div className="flex items-center justify-between">
