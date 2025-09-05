@@ -3,7 +3,9 @@
 import type React from "react"
 import type { Metadata } from "next"
 
-import { useState } from "react"
+import { useState, useRef, useEffect } from "react"
+import emailjs from '@emailjs/browser'
+import { useCompanyInfo } from "@/hooks/use-company-info"
 import { Hero } from "@/components/hero"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -15,6 +17,8 @@ import { useToast } from "@/hooks/use-toast"
 import { Phone, Mail, MapPin, Clock, Send, CheckCircle, AlertCircle, Sparkles, MessageSquare, Calendar, Award } from "lucide-react"
 
 export default function ContactPage() {
+  const formRef = useRef<HTMLFormElement>(null)
+  const { companyInfo, loading: companyLoading } = useCompanyInfo()
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -26,31 +30,35 @@ export default function ContactPage() {
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle')
   const { toast } = useToast()
 
+  // Initialize EmailJS
+  useEffect(() => {
+    emailjs.init('rxu0Ie8ITnC1L3OmC')
+  }, [])
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsSubmitting(true)
     setSubmitStatus('idle')
 
     try {
-      const response = await fetch('/api/contact', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      })
+      if (!formRef.current) throw new Error('Form reference not found')
 
-      if (response.ok) {
-        setSubmitStatus('success')
-        toast({
-          title: "Message sent successfully!",
-          description: "We'll get back to you within 24 hours.",
-        })
-        setFormData({ name: "", email: "", phone: "", projectType: "", message: "" })
-      } else {
-        throw new Error('Failed to send message')
-      }
+      // Send email using EmailJS
+      await emailjs.sendForm(
+        'service_52bbftd', // Your service ID
+        'template_bwq0jjb', // Your template ID
+        formRef.current,
+        'rxu0Ie8ITnC1L3OmC' // Your public key
+      )
+
+      setSubmitStatus('success')
+      toast({
+        title: "Message sent successfully!",
+        description: "We'll get back to you within 24 hours.",
+      })
+      setFormData({ name: "", email: "", phone: "", projectType: "", message: "" })
     } catch (error) {
+      console.error('Email sending failed:', error)
       setSubmitStatus('error')
       toast({
         title: "Failed to send message",
@@ -73,22 +81,22 @@ export default function ContactPage() {
     {
       icon: Phone,
       title: "Phone",
-      details: "(555) 123-4567",
+      details: companyLoading ? "Loading..." : companyInfo?.phone || "+1 (587) 227-5003",
       subtitle: "Mon-Fri 8AM-6PM",
       color: "bg-blue-500/10 text-blue-600",
     },
     {
       icon: Mail,
       title: "Email",
-      details: "info@stoneworks.com",
+      details: companyLoading ? "Loading..." : companyInfo?.email || "newcrescentgranite@gmail.com",
       subtitle: "We respond within 24 hours",
       color: "bg-green-500/10 text-green-600",
     },
     {
       icon: MapPin,
       title: "Address",
-      details: "123 Stone Avenue",
-      subtitle: "City, ST 12345",
+      details: companyLoading ? "Loading..." : companyInfo?.address || "Edmonton AB",
+      subtitle: "Visit our showroom",
       color: "bg-purple-500/10 text-purple-600",
     },
     {
@@ -167,7 +175,7 @@ export default function ContactPage() {
       <section className="py-20 bg-background relative overflow-hidden">
         {/* Background decoration */}
         <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-muted/20 pointer-events-none" />
-        
+
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
             {/* Contact Form */}
@@ -184,16 +192,16 @@ export default function ContactPage() {
 
               <Card className="backdrop-blur-sm bg-background/80 border-0 shadow-xl h-full">
                 <CardContent className="p-8 h-full flex flex-col">
-                  <form onSubmit={handleSubmit} className="space-y-6 flex-1">
+                  <form ref={formRef} onSubmit={handleSubmit} className="space-y-6 flex-1">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div>
                         <Label htmlFor="name" className="text-sm font-medium">Full Name *</Label>
-                        <Input 
-                          id="name" 
-                          name="name" 
-                          value={formData.name} 
-                          onChange={handleChange} 
-                          required 
+                        <Input
+                          id="name"
+                          name="name"
+                          value={formData.name}
+                          onChange={handleChange}
+                          required
                           className="mt-2 h-12"
                           placeholder="John Doe"
                         />
@@ -216,12 +224,12 @@ export default function ContactPage() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div>
                         <Label htmlFor="phone" className="text-sm font-medium">Phone Number</Label>
-                        <Input 
-                          id="phone" 
-                          name="phone" 
-                          type="tel" 
-                          value={formData.phone} 
-                          onChange={handleChange} 
+                        <Input
+                          id="phone"
+                          name="phone"
+                          type="tel"
+                          value={formData.phone}
+                          onChange={handleChange}
                           className="mt-2 h-12"
                           placeholder="(555) 123-4567"
                         />
@@ -264,10 +272,10 @@ export default function ContactPage() {
                       </ul>
                     </div>
 
-                    <Button 
-                      type="submit" 
-                      size="lg" 
-                      className="w-full h-12 text-base font-medium mt-auto" 
+                    <Button
+                      type="submit"
+                      size="lg"
+                      className="w-full h-12 text-base font-medium mt-auto"
                       disabled={isSubmitting}
                     >
                       {isSubmitting ? (
@@ -346,7 +354,7 @@ export default function ContactPage() {
                     <Phone className="w-6 h-6" />
                   </div>
                   <h3 className="font-semibold text-lg mb-2 text-orange-800">Emergency Service</h3>
-                  <p className="text-orange-700 font-medium mb-1">(555) 911-STONE</p>
+                  <p className="text-orange-700 font-medium mb-1">{companyLoading ? "Loading..." : companyInfo?.phone || "+1 (587) 227-5003"}</p>
                   <p className="text-sm text-orange-600">24/7 Emergency Repairs</p>
                 </CardContent>
               </Card>
@@ -367,7 +375,7 @@ export default function ContactPage() {
                     <Sparkles className="w-12 h-12 mx-auto mb-6 opacity-90" />
                     <h3 className="text-3xl font-bold mb-4">Ready to Start Your Project?</h3>
                     <p className="opacity-90 mb-8 text-lg">Join 500+ satisfied customers who chose our expertise</p>
-                    
+
                     <div className="grid grid-cols-3 gap-6">
                       <div className="text-center">
                         <div className="font-bold text-3xl mb-2">25+</div>
@@ -382,7 +390,7 @@ export default function ContactPage() {
                         <div className="opacity-80 text-sm">Satisfaction Rate</div>
                       </div>
                     </div>
-                    
+
                     <Button size="lg" variant="secondary" className="mt-8 text-white hover:text-primary/80">
                       <Calendar className="w-5 h-5 mr-2" />
                       Get Free Quote
@@ -459,25 +467,42 @@ export default function ContactPage() {
             </Badge>
             <h2 className="text-3xl font-bold mb-4">Find Us</h2>
             <p className="text-muted-foreground max-w-2xl mx-auto">
-              Visit our showroom to see our extensive collection of granite and quartz materials. Touch, feel, and 
+              Visit our showroom to see our extensive collection of granite and quartz materials. Touch, feel, and
               experience the quality that sets us apart.
             </p>
           </div>
 
           <Card className="overflow-hidden shadow-2xl border-0">
-            <div className="h-96 bg-gradient-to-br from-muted via-muted/80 to-muted/60 flex items-center justify-center relative">
-              {/* Decorative elements */}
-              <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent" />
-              <div className="text-center relative z-10">
-                <div className="w-20 h-20 bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-6 backdrop-blur-sm">
-                  <MapPin className="w-10 h-10 text-primary" />
+            <div className="relative h-96">
+              <iframe 
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d151746.81728951394!2d-113.51334879750496!3d53.53912822434146!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x53a0224580deff23%3A0x411fa00c4af6155d!2sEdmonton%2C%20AB%2C%20Canada!5e0!3m2!1sen!2s!4v1757032540426!5m2!1sen!2s" 
+                width="100%" 
+                height="100%" 
+                style={{ border: 0 }}
+                allowFullScreen
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                className="rounded-lg"
+              />
+              
+              {/* Overlay Info Card */}
+              <div className="absolute bottom-4 left-4 right-4 bg-background/95 backdrop-blur-sm rounded-lg p-4 shadow-lg border">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h3 className="font-semibold text-lg mb-1">New Crescent Granite & Quartz</h3>
+                    <p className="text-muted-foreground text-sm mb-2">
+                      {companyLoading ? "Loading..." : companyInfo?.address || "Edmonton, AB"}
+                    </p>
+                    <div className="flex items-center text-sm text-muted-foreground">
+                      <Clock className="w-4 h-4 mr-2" />
+                      Mon-Fri: 8AM-6PM, Sat: 9AM-4PM
+                    </div>
+                  </div>
+                  <Button variant="outline" size="sm" className="flex-shrink-0">
+                    <Phone className="w-4 h-4 mr-2" />
+                    Call Directions
+                  </Button>
                 </div>
-                <h3 className="text-xl font-semibold mb-2">Interactive Map Coming Soon</h3>
-                <p className="text-muted-foreground mb-4">123 Stone Avenue, City, ST 12345</p>
-                <Button variant="outline" className="bg-background/80 backdrop-blur-sm">
-                  <Phone className="w-4 h-4 mr-2" />
-                  Call for Directions
-                </Button>
               </div>
             </div>
           </Card>
@@ -490,7 +515,7 @@ export default function ContactPage() {
                   <MapPin className="w-6 h-6" />
                 </div>
                 <h3 className="font-semibold mb-2">Easy to Find</h3>
-                <p className="text-sm text-muted-foreground">Located on main Stone Avenue with ample parking</p>
+                <p className="text-sm text-muted-foreground">Conveniently located in Edmonton with easy access</p>
               </CardContent>
             </Card>
             <Card className="text-center border-0 bg-gradient-to-br from-background to-muted/30">
@@ -519,7 +544,7 @@ export default function ContactPage() {
       <section className="py-20 bg-gradient-to-r from-primary via-primary/95 to-primary text-primary-foreground relative overflow-hidden">
         {/* Background decoration */}
         <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMiIgZmlsbD0icmdiYSgyNTUsMjU1LDI1NSwwLjEpIi8+Cjwvc3ZnPg==')] opacity-20" />
-        
+
         <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8 relative">
           <div className="mb-6">
             <Sparkles className="w-12 h-12 mx-auto mb-4 opacity-90" />
@@ -535,7 +560,7 @@ export default function ContactPage() {
             </Button>
             <Button size="lg" variant="outline" className="border-primary-foreground/30 text-primary hover:bg-primary-foreground/10">
               <Phone className="w-5 h-5 mr-2" />
-              Call Now: (555) 123-4567
+              Call Now: {companyLoading ? "+1 (587) 227-5003" : companyInfo?.phone || "+1 (587) 227-5003"}
             </Button>
           </div>
           <p className="text-sm opacity-75 mt-6">Free estimates • Licensed & Insured • 25+ Years Experience</p>

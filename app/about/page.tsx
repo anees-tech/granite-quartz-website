@@ -5,15 +5,18 @@ import { AnimatedSection } from "@/components/animated-section"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
+import { useCompanyInfo } from "@/hooks/use-company-info"
 import { Users, Award, Globe, Heart, ArrowRight } from "lucide-react"
 import { motion } from "framer-motion"
 import Link from "next/link"
 
 export default function AboutPage() {
+  const { companyInfo, loading: companyLoading } = useCompanyInfo()
+
   const stats = [
     { icon: Award, number: "Best Price", label: "Competitive Pricing" },
     { icon: Heart, number: "100%", label: "Customer Satisfaction" },
-    { icon: Globe, number: "Calgary, AB", label: "Serving Area" },
+    { icon: Globe, number: companyLoading ? "Loading..." : companyInfo?.address || "Calgary, AB", label: "Serving Area" },
     { icon: Users, number: "Expert Team", label: "Skilled Fabricators" },
   ]
 
@@ -42,13 +45,13 @@ export default function AboutPage() {
               </Badge>
               <h2 className="text-3xl md:text-4xl font-bold mb-6">New Crescent Granite and Quartz Corporation</h2>
               <p className="text-muted-foreground mb-6">
-                New Crescent Granite and Quartz Corporation is a highly reputable company based in Calgary, AB, specializing in the supply and installation of premium granite and quartz products. We offer a full range of services for granite and quartz kitchen countertops, from expert fabrication to professional installation.
+                {companyLoading ? "Loading..." : companyInfo?.about || "New Crescent Granite and Quartz Corporation is a highly reputable company based in Calgary, AB, specializing in the supply and installation of premium granite and quartz products. We offer a full range of services for granite and quartz kitchen countertops, from expert fabrication to professional installation."}
               </p>
               <p className="text-muted-foreground mb-6">
                 Founded by Faisal Shahzad—a skilled fabricator and installer—our company is dedicated to customer satisfaction, quality craftsmanship, and competitive pricing. Whether you’re upgrading your kitchen or starting a new project, we deliver the best price and top quality for granite and quartz countertops in Calgary.
               </p>
               <p className="text-muted-foreground mb-8">
-                Contact us online or call Faisal Shahzad at <a href="tel:5872275003" className="text-primary underline">587-227-5003</a> to get started. Your satisfaction is our priority.
+                Contact us online or call Faisal Shahzad at <a href={`tel:${companyLoading ? "5872275003" : companyInfo?.phone?.replace(/[^\d]/g, '') || "5872275003"}`} className="text-primary underline">{companyLoading ? "587-227-5003" : companyInfo?.phone || "587-227-5003"}</a> to get started. Your satisfaction is our priority.
               </p>
               <Link href="/contact">
                 <Button className="transform hover:scale-105 transition-all duration-300 hover:shadow-lg">

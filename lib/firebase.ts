@@ -30,6 +30,13 @@ if (typeof window !== "undefined") {
 }
 
 // Type definitions
+export interface CompanyInfo {
+  about: string;
+  address: string;
+  email: string;
+  phone: string;
+}
+
 export interface Review {
   id: string;
   galleryId: string;
@@ -206,6 +213,27 @@ export async function getGalleryItemById(id: string): Promise<GalleryItem | null
   console.log("🔥 Raw Firestore Doc:", { id: docSnap.id, data: docSnap.data() });
   
   return item;
+}
+
+// Get company information from Firebase
+export async function getCompanyInfo(): Promise<CompanyInfo | null> {
+  try {
+    const docRef = doc(db, "footerData", "main");
+    const docSnap = await getDoc(docRef);
+    
+    if (!docSnap.exists()) {
+      console.log("🔥 Company info not found");
+      return null;
+    }
+    
+    const data = serializeFirestoreData(docSnap.data()) as CompanyInfo;
+    console.log("🔥 Company Info:", data);
+    
+    return data;
+  } catch (error) {
+    console.error("🔥 Error fetching company info:", error);
+    return null;
+  }
 }
 
 export { app, auth, db };

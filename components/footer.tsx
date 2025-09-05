@@ -1,7 +1,12 @@
+"use client"
+
 import Link from "next/link"
 import { Facebook, Instagram, Twitter, Mail, Phone, MapPin } from "lucide-react"
+import { useCompanyInfo } from "@/hooks/use-company-info"
 
 export function Footer() {
+  const { companyInfo, loading, error } = useCompanyInfo()
+
   return (
     <footer className="bg-card border-t">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -18,7 +23,7 @@ export function Footer() {
               </span>
             </div>
             <p className="text-muted-foreground">
-              Elevating spaces with premium granite &amp; quartz. Crafting excellence for modern living.
+              {loading ? "Loading..." : companyInfo?.about || "Elevating spaces with premium granite & quartz. Crafting excellence for modern living."}
             </p>
             <div className="flex space-x-4">
               <Facebook className="w-5 h-5 text-muted-foreground hover:text-primary cursor-pointer transition-colors" />
@@ -63,15 +68,21 @@ export function Footer() {
             <div className="space-y-3">
               <div className="flex items-center space-x-3">
                 <Phone className="w-4 h-4 text-primary" />
-                <span className="text-muted-foreground">(555) 123-4567</span>
+                <span className="text-muted-foreground">
+                  {loading ? "Loading..." : companyInfo?.phone || "(555) 123-4567"}
+                </span>
               </div>
               <div className="flex items-center space-x-3">
                 <Mail className="w-4 h-4 text-primary" />
-                <span className="text-muted-foreground">info@stoneworks.com</span>
+                <span className="text-muted-foreground">
+                  {loading ? "Loading..." : companyInfo?.email || "info@stoneworks.com"}
+                </span>
               </div>
               <div className="flex items-center space-x-3">
                 <MapPin className="w-4 h-4 text-primary" />
-                <span className="text-muted-foreground">123 Stone Ave, City, ST 12345</span>
+                <span className="text-muted-foreground">
+                  {loading ? "Loading..." : companyInfo?.address || "123 Stone Ave, City, ST 12345"}
+                </span>
               </div>
             </div>
           </div>
