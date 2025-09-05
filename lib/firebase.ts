@@ -142,14 +142,12 @@ export async function getReviews(galleryId: string): Promise<Review[]> {
     ...doc.data(),
   })) as Review[];
   
-  console.log("💬 Reviews for gallery item:", galleryId, reviews);
   return reviews;
 }
 
 export async function updateReviewStatus(reviewId: string, status: "pending" | "approved" | "rejected"): Promise<void> {
   const reviewRef = doc(db, "reviews", reviewId);
   await updateDoc(reviewRef, { status });
-  console.log("💬 Updated review status:", reviewId, status);
 }
 
 // Gallery functions
@@ -164,7 +162,6 @@ function serializeFirestoreData(data: any): any {
     if (data.toDate && typeof data.toDate === 'function') {
       // Convert Firestore Timestamp to ISO string
       const serializedDate = data.toDate().toISOString();
-      console.log("🔄 Serializing Timestamp:", data, "→", serializedDate);
       return serializedDate;
     }
     const serialized: any = {};
@@ -194,8 +191,6 @@ export async function getGalleryItems(): Promise<GalleryItem[]> {
       } as GalleryItem;
     })
   );
-  console.log("🔥 Firebase Gallery Items:", items);
-  console.log("🔥 Raw Firestore Docs:", querySnapshot.docs.map(doc => ({ id: doc.id, data: doc.data() })));
   return items;
 }
 
@@ -204,13 +199,10 @@ export async function getGalleryItemById(id: string): Promise<GalleryItem | null
   const docSnap = await getDoc(docRef);
   
   if (!docSnap.exists()) {
-    console.log("🔥 Gallery item not found for ID:", id);
     return null;
   }
   
   const item = { id: docSnap.id, ...serializeFirestoreData(docSnap.data()) } as GalleryItem;
-  console.log("🔥 Single Gallery Item:", item);
-  console.log("🔥 Raw Firestore Doc:", { id: docSnap.id, data: docSnap.data() });
   
   return item;
 }
@@ -222,12 +214,10 @@ export async function getCompanyInfo(): Promise<CompanyInfo | null> {
     const docSnap = await getDoc(docRef);
     
     if (!docSnap.exists()) {
-      console.log("🔥 Company info not found");
       return null;
     }
     
     const data = serializeFirestoreData(docSnap.data()) as CompanyInfo;
-    console.log("🔥 Company Info:", data);
     
     return data;
   } catch (error) {

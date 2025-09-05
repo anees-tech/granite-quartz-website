@@ -26,15 +26,10 @@ export function ReviewSection({ galleryId, className }: ReviewSectionProps) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        if (currentUser) {
-          // If user is logged in, show all reviews (including their pending ones)
-          const allReviews = await getReviews(galleryId);
-          setReviews(allReviews);
-        } else {
-          // If user is not logged in, show only approved reviews
-          const approvedReviews = await getApprovedReviews(galleryId);
-          setReviews(approvedReviews);
-        }
+        // Always show only approved reviews to everyone
+        // Users can see their own reviews (including pending) in the dashboard
+        const approvedReviews = await getApprovedReviews(galleryId);
+        setReviews(approvedReviews);
       } catch (error) {
         console.error("Failed to fetch review data:", error);
       } finally {

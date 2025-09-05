@@ -1,10 +1,12 @@
 "use client"
 
+import { useEffect, useState } from "react"
 import { AnimatedHero } from "@/components/animated-hero"
 import { AnimatedSection } from "@/components/animated-section"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
+import { getGalleryItems, type GalleryItem } from "@/lib/firebase"
 import { Hammer, Shield, Award, Clock, Star, ArrowRight, CheckCircle, MessageCircle } from "lucide-react"
 import { Swiper, SwiperSlide } from "swiper/react"
 import { Navigation, Pagination, Autoplay } from "swiper/modules"
@@ -15,6 +17,27 @@ import { motion } from "framer-motion"
 import Link from "next/link"
 
 export default function HomePage() {
+  const [featuredGallery, setFeaturedGallery] = useState<GalleryItem[]>([])
+  const [galleryLoading, setGalleryLoading] = useState(true)
+
+  // Fetch featured gallery items from Firebase
+  useEffect(() => {
+    const fetchGallery = async () => {
+      try {
+        setGalleryLoading(true)
+        const items = await getGalleryItems()
+        // Get the first 3 items as featured, or all if less than 3
+        setFeaturedGallery(items.slice(0, 3))
+      } catch (error) {
+        console.error('Error fetching gallery items:', error)
+      } finally {
+        setGalleryLoading(false)
+      }
+    }
+
+    fetchGallery()
+  }, [])
+
   const services = [
     {
       icon: Hammer,
@@ -35,27 +58,6 @@ export default function HomePage() {
       icon: Clock,
       title: "Fast Turnaround",
       description: "Most projects completed within 7-10 business days.",
-    },
-  ]
-
-  const featuredGallery = [
-    {
-      id: 1,
-      title: "Modern Kitchen",
-      image: "/modern-granite-kitchen-countertop.png",
-      category: "Kitchen",
-    },
-    {
-      id: 2,
-      title: "Luxury Bathroom",
-      image: "/luxury-quartz-bathroom-vanity.png",
-      category: "Bathroom",
-    },
-    {
-      id: 3,
-      title: "Office Reception",
-      image: "/commercial-granite-reception-desk.png",
-      category: "Commercial",
     },
   ]
 
@@ -158,45 +160,65 @@ export default function HomePage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
-            {featuredGallery.map((item, index) => (
-              <motion.div
-                key={item.id}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: index * 0.2 }}
-                whileHover={{ y: -10 }}
-              >
-                <Card className="overflow-hidden hover:shadow-xl transition-all duration-500 group">
-                  <div className="relative overflow-hidden">
-                    <motion.img
-                      src={item.image || "/placeholder.svg"}
-                      alt={item.title}
-                      className="w-full h-64 object-cover"
-                      whileHover={{ scale: 1.1 }}
-                      transition={{ duration: 0.6 }}
-                    />
-                    <motion.div
-                      className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                      initial={{ opacity: 0 }}
-                      whileHover={{ opacity: 1 }}
-                    />
-                    <div className="absolute top-4 left-4">
-                      <Badge>{item.category}</Badge>
-                    </div>
-                  </div>
+            {galleryLoading ? (
+              // Loading skeleton
+              [...Array(3)].map((_, index) => (
+                <Card key={index} className="overflow-hidden animate-pulse">
+                  <div className="h-64 bg-muted"></div>
                   <CardContent className="p-6">
-                    <h3 className="text-xl font-semibold mb-2">{item.title}</h3>
-                    <Link href={`/gallery/${item.id}`} className="text-primary hover:underline flex items-center group">
-                      View Details
-                      <motion.div whileHover={{ x: 5 }}>
-                        <ArrowRight className="w-4 h-4 ml-1" />
-                      </motion.div>
-                    </Link>
+                    <div className="h-6 bg-muted rounded mb-2"></div>
+                    <div className="h-4 bg-muted rounded w-24"></div>
                   </CardContent>
                 </Card>
-              </motion.div>
-            ))}
+              ))
+            ) : featuredGallery.length === 0 ? (
+              <div className="col-span-3 text-center py-12">
+                <p className="text-muted-foreground">No gallery items found.</p>
+              </div>
+            ) : (
+              featuredGallery.map((item, index) => (
+                <motion.div
+                  key={item.id}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6, delay: index * 0.2 }}
+                  whileHover={{ y: -10 }}
+                >
+                  <Card className="overflow-hidden hover:shadow-xl transition-all duration-500 group">
+                    <div className="relative overflow-hidden">
+                      <motion.img
+                        src={item.mainImageUrl || "/placeholder.svg"}
+                        alt={item.title}
+                        className="w-full h-64 object-cover"
+                        whileHover={{ scale: 1.1 }}
+                        transition={{ duration: 0.6 }}
+                      />
+                      <motion.div
+                        className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                        initial={{ opacity: 0 }}
+                        whileHover={{ opacity: 1 }}
+                      />
+                      <div className="absolute top-4 left-4">
+                        <Badge>{item.category}</Badge>
+                      </div>
+                    </div>
+                    <CardContent className="p-6">
+                      <h3 className="text-xl font-semibold mb-2">{item.title}</h3>
+                      <p className="text-muted-foreground text-sm mb-4 line-clamp-2">
+                        {item.description}
+                      </p>
+                      <Link href={`/gallery/${item.id}`} className="text-primary hover:underline flex items-center group">
+                        View Details
+                        <motion.div whileHover={{ x: 5 }}>
+                          <ArrowRight className="w-4 h-4 ml-1" />
+                        </motion.div>
+                      </Link>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              ))
+            )}
           </div>
 
           <motion.div

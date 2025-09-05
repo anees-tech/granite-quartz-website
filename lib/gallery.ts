@@ -89,7 +89,6 @@ function serializeFirestoreData(data: any): any {
 		if (data.toDate && typeof data.toDate === 'function') {
 			// Convert Firestore Timestamp to ISO string
 			const serializedDate = data.toDate().toISOString();
-			console.log("🔄 Serializing Timestamp:", data, "→", serializedDate);
 			return serializedDate;
 		}
 		const serialized: any = {};
@@ -120,8 +119,6 @@ export async function getGalleryItems(): Promise<GalleryItem[]> {
 			} as GalleryItem;
 		})
 	);
-	console.log("🔥 Firebase Gallery Items:", items);
-	console.log("🔥 Raw Firestore Docs:", querySnapshot.docs.map(doc => ({ id: doc.id, data: doc.data() })));
 	return items;
 }
 
@@ -131,13 +128,10 @@ export async function getGalleryItemById(id: string): Promise<GalleryItem | null
 	const docSnap = await getDoc(docRef);
 	
 	if (!docSnap.exists()) {
-		console.log("🔥 Gallery item not found for ID:", id);
 		return null;
 	}
 	
 	const item = { id: docSnap.id, ...serializeFirestoreData(docSnap.data()) } as GalleryItem;
-	console.log("🔥 Single Gallery Item:", item);
-	console.log("🔥 Raw Firestore Doc:", { id: docSnap.id, data: docSnap.data() });
 	
 	return item;
 }
