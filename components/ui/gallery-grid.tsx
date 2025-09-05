@@ -1,5 +1,4 @@
 "use client";
-
 import Link from "next/link";
 import Image from "next/image";
 import { GalleryItem } from "@/lib/gallery";
@@ -9,18 +8,18 @@ interface GalleryGridProps {
 }
 
 export default function GalleryGrid({ items }: GalleryGridProps) {
-  console.log("🎨 GalleryGrid - Received items:", items);
-  console.log("🎨 GalleryGrid - Items count:", items.length);
   
-  if (items.length === 0) {
-    console.log("🎨 GalleryGrid - No items to display");
+  if (!items || items.length === 0) {
+    return (
+      <div className="text-center py-12">
+        <p className="text-muted-foreground">No gallery items available.</p>
+      </div>
+    );
   }
   
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
       {items.map(item => {
-        console.log("🎨 GalleryGrid - Rendering item:", item);
-        console.log("🎨 GalleryGrid - Item image:", item.mainImageUrl);
         
         return (
           <Link

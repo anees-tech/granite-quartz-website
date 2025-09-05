@@ -158,7 +158,6 @@ export async function getReviews(galleryId: string): Promise<Review[]> {
 		...doc.data(),
 	})) as Review[];
 	
-	console.log("💬 Reviews for gallery item:", galleryId, reviews);
 	return reviews;
 }
 
@@ -166,5 +165,4 @@ export async function getReviews(galleryId: string): Promise<Review[]> {
 export async function updateReviewStatus(reviewId: string, status: "pending" | "approved" | "rejected"): Promise<void> {
 	const reviewRef = doc(db, "reviews", reviewId);
 	await updateDoc(reviewRef, { status });
-	console.log("💬 Updated review status:", reviewId, status);
 }

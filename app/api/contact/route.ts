@@ -12,16 +12,6 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // For now, just log the form submission (replace with EmailJS later)
-    console.log('📧 Contact Form Submission:', {
-      name,
-      email,
-      phone,
-      projectType,
-      message,
-      timestamp: new Date().toISOString()
-    });
-
     // Simulate processing time
     await new Promise(resolve => setTimeout(resolve, 1000));
 

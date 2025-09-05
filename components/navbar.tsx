@@ -30,7 +30,6 @@ export function Navbar() {
 
   const { user, logout, loading } = useAuth();
 
-  console.log("useAuth:", user);
   return (
     <motion.nav
       className={cn(
