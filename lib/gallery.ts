@@ -84,7 +84,7 @@ export async function addGalleryItem(item: Omit<GalleryItem, "id">): Promise<Gal
 }
 
 // Helper function to serialize Firestore data
-function serializeFirestoreData(data: any): any {
+export function serializeFirestoreData(data: any): any {
 	if (data && typeof data === 'object') {
 		if (data.toDate && typeof data.toDate === 'function') {
 			// Convert Firestore Timestamp to ISO string
@@ -103,10 +103,13 @@ function serializeFirestoreData(data: any): any {
 // Get all gallery items
 export async function getGalleryItems(): Promise<GalleryItem[]> {
 	const querySnapshot = await getDocs(collection(db, "gallery"));
+	console.log('🔥 Gallery.ts - Firestore docs count:', querySnapshot.size)
+	
 	const items = await Promise.all(
 		querySnapshot.docs.map(async doc => {
 			const data = serializeFirestoreData(doc.data());
 			const id = doc.id;
+			console.log('🔥 Gallery.ts - Processing doc:', { id, title: data.title })
 			// Fetch approved reviews for this gallery item
 			const reviews = await getApprovedReviews(id);
 			const reviewCount = reviews.length;
@@ -119,6 +122,7 @@ export async function getGalleryItems(): Promise<GalleryItem[]> {
 			} as GalleryItem;
 		})
 	);
+	console.log('🔥 Gallery.ts - Final processed items:', items.length)
 	return items;
 }
 

@@ -19,7 +19,11 @@ export default function GalleryGrid({ items }: GalleryGridProps) {
   
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-      {items.map(item => {
+      {items.filter(item => item && item.id).map(item => {
+        // Validate item data
+        if (!item.title && !item.mainImageUrl) {
+          return null; // Skip invalid items
+        }
         
         return (
           <Link

@@ -36,18 +36,18 @@ export const metadata: Metadata = {
 export default async function GalleryPage() {
   const items = await getGalleryItems();
   
-  // DEBUG: Log exactly what we're getting from Firestore
-  if (typeof window === 'undefined') { // Only log on server
-    console.log('🔍 GALLERY DEBUG - Total items:', items.length);
-    items.forEach((item, i) => {
-      console.log(`🔍 Item ${i+1}:`, {
-        id: item.id,
-        title: item.title,
-        category: item.category,
-        hasImage: !!item.mainImageUrl
-      });
-    });
-  }
+  // Temporary debug logging
+  console.log('📄 Gallery Page - Raw items from Firebase:', items)
+  console.log('📄 Gallery Page - Items count:', items.length)
+  items.forEach((item, index) => {
+    console.log(`📄 Gallery Item ${index + 1}:`, {
+      id: item.id,
+      title: item.title,
+      category: item.category,
+      material: item.material
+    })
+  })
+  
   
   return (
     <div className="min-h-screen">

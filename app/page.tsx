@@ -6,7 +6,7 @@ import { AnimatedSection } from "@/components/animated-section"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { getGalleryItems, type GalleryItem } from "@/lib/firebase"
+import { getGalleryItems, type GalleryItem } from "@/lib/gallery"
 import { Hammer, Shield, Award, Clock, Star, ArrowRight, CheckCircle, MessageCircle } from "lucide-react"
 import { Swiper, SwiperSlide } from "swiper/react"
 import { Navigation, Pagination, Autoplay } from "swiper/modules"
@@ -26,8 +26,19 @@ export default function HomePage() {
       try {
         setGalleryLoading(true)
         const items = await getGalleryItems()
+        console.log('🏠 Homepage - Raw items from Firebase:', items)
+        console.log('🏠 Homepage - Items count:', items.length)
+        items.forEach((item, index) => {
+          console.log(`🏠 Item ${index + 1}:`, {
+            id: item.id,
+            title: item.title,
+            category: item.category
+          })
+        })
         // Get the first 3 items as featured, or all if less than 3
-        setFeaturedGallery(items.slice(0, 3))
+        const featured = items.slice(0, 3)
+        console.log('🏠 Homepage - Featured items:', featured)
+        setFeaturedGallery(featured)
       } catch (error) {
         console.error('Error fetching gallery items:', error)
       } finally {
@@ -74,7 +85,7 @@ export default function HomePage() {
     <div className="min-h-screen">
       {/* Enhanced Hero Section */}
       <AnimatedHero
-        title="Premium Granite & Quartz"
+        title="New Crescent Granite & Quartz"
         subtitle="Transform your space with our exquisite collection of natural stone materials. Quality craftsmanship meets timeless elegance."
         backgroundImage="/luxury-granite-kitchen-countertop-installation.png"
         showCTA

@@ -3,6 +3,7 @@ import { initializeApp, getApps, getApp } from "firebase/app";
 import { getAuth, onAuthStateChanged, User } from "firebase/auth";
 import { getFirestore, collection, addDoc, getDocs, doc, getDoc, query, where, orderBy, updateDoc, deleteDoc } from "firebase/firestore";
 import { getAnalytics, isSupported } from "firebase/analytics";
+import { serializeFirestoreData } from "./gallery";
 
 // Firebase configuration
 const firebaseConfig = {
@@ -154,57 +155,6 @@ export async function updateReviewStatus(reviewId: string, status: "pending" | "
 export async function addGalleryItem(item: Omit<GalleryItem, "id">): Promise<GalleryItem> {
   const docRef = await addDoc(collection(db, "gallery"), item);
   return { id: docRef.id, ...item };
-}
-
-// Helper function to serialize Firestore data
-function serializeFirestoreData(data: any): any {
-  if (data && typeof data === 'object') {
-    if (data.toDate && typeof data.toDate === 'function') {
-      // Convert Firestore Timestamp to ISO string
-      const serializedDate = data.toDate().toISOString();
-      return serializedDate;
-    }
-    const serialized: any = {};
-    for (const key in data) {
-      serialized[key] = serializeFirestoreData(data[key]);
-    }
-    return serialized;
-  }
-  return data;
-}
-
-export async function getGalleryItems(): Promise<GalleryItem[]> {
-  const querySnapshot = await getDocs(collection(db, "gallery"));
-  const items = await Promise.all(
-    querySnapshot.docs.map(async doc => {
-      const data = serializeFirestoreData(doc.data());
-      const id = doc.id;
-      // Fetch approved reviews for this gallery item
-      const reviews = await getApprovedReviews(id);
-      const reviewCount = reviews.length;
-      const averageRating = reviewCount > 0 ? reviews.reduce((sum, r) => sum + (r.rating || 0), 0) / reviewCount : 0;
-      return {
-        id,
-        ...data,
-        averageRating,
-        reviewCount,
-      } as GalleryItem;
-    })
-  );
-  return items;
-}
-
-export async function getGalleryItemById(id: string): Promise<GalleryItem | null> {
-  const docRef = doc(db, "gallery", id);
-  const docSnap = await getDoc(docRef);
-  
-  if (!docSnap.exists()) {
-    return null;
-  }
-  
-  const item = { id: docSnap.id, ...serializeFirestoreData(docSnap.data()) } as GalleryItem;
-  
-  return item;
 }
 
 // Get company information from Firebase
