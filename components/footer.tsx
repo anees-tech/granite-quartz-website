@@ -23,7 +23,7 @@ export function Footer() {
               </span>
             </div>
             <p className="text-muted-foreground">
-              {loading ? "Loading..." : companyInfo?.about || "Elevating spaces with premium granite & quartz. Crafting excellence for modern living."}
+              {loading ? "Loading..." : companyInfo?.about || "Elevating spaces with luxury granite & quartz. Crafting excellence for modern living."}
             </p>
             <div className="flex space-x-4">
               <Facebook className="w-5 h-5 text-muted-foreground hover:text-primary cursor-pointer transition-colors" />

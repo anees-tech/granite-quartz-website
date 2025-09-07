@@ -20,7 +20,7 @@ export const metadata: Metadata = {
     "quartz installation photos"
   ],
   openGraph: {
-    title: "Gallery - Stone Projects & Installations | Premium Granite & Quartz",
+    title: "Gallery - Stone Projects & Installations | New Crescent Granite & Quartz",
     description: "Browse our stunning portfolio of granite and quartz installations. Kitchen countertops, bathroom vanities, and custom stone work.",
     images: [
       {
@@ -35,18 +35,6 @@ export const metadata: Metadata = {
 
 export default async function GalleryPage() {
   const items = await getGalleryItems();
-  
-  // Temporary debug logging
-  console.log('📄 Gallery Page - Raw items from Firebase:', items)
-  console.log('📄 Gallery Page - Items count:', items.length)
-  items.forEach((item, index) => {
-    console.log(`📄 Gallery Item ${index + 1}:`, {
-      id: item.id,
-      title: item.title,
-      category: item.category,
-      material: item.material
-    })
-  })
   
   
   return (

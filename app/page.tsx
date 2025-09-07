@@ -26,18 +26,8 @@ export default function HomePage() {
       try {
         setGalleryLoading(true)
         const items = await getGalleryItems()
-        console.log('🏠 Homepage - Raw items from Firebase:', items)
-        console.log('🏠 Homepage - Items count:', items.length)
-        items.forEach((item, index) => {
-          console.log(`🏠 Item ${index + 1}:`, {
-            id: item.id,
-            title: item.title,
-            category: item.category
-          })
-        })
         // Get the first 3 items as featured, or all if less than 3
         const featured = items.slice(0, 3)
-        console.log('🏠 Homepage - Featured items:', featured)
         setFeaturedGallery(featured)
       } catch (error) {
         console.error('Error fetching gallery items:', error)
@@ -58,7 +48,7 @@ export default function HomePage() {
     {
       icon: Shield,
       title: "Quality Guarantee",
-      description: "25-year warranty on all installations with premium materials.",
+      description: "25-year warranty on all installations with luxury materials.",
     },
     {
       icon: Award,
@@ -73,7 +63,7 @@ export default function HomePage() {
   ]
 
   const whyChooseUs = [
-    "Premium quality materials sourced globally",
+    "Luxury quality materials sourced globally",
     "Expert craftsmanship with attention to detail",
     "Competitive pricing with transparent quotes",
     "Exceptional customer service and support",

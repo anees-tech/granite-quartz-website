@@ -16,7 +16,7 @@ export const metadata: Metadata = {
     template: "%s | New Crescent Granite & Quartz"
   },
   description:
-    "Calgary's trusted source for premium granite and quartz countertops. Expert fabrication and installation with the best prices and quality. Call Faisal Shahzad at 587-227-5003 for your free quote.",
+    "Calgary's trusted source for luxury granite and quartz countertops. Expert fabrication and installation with the best prices and quality. Call Faisal Shahzad at 587-227-5003 for your free quote.",
   keywords: [
     "granite countertops",
     "quartz countertops", 
@@ -31,9 +31,9 @@ export const metadata: Metadata = {
     "stone contractor",
     "luxury stone materials"
   ],
-  authors: [{ name: "Premium Granite & Quartz" }],
-  creator: "Premium Granite & Quartz",
-  publisher: "Premium Granite & Quartz",
+  authors: [{ name: "New Crescent Granite & Quartz" }],
+  creator: "New Crescent Granite & Quartz",
+  publisher: "New Crescent Granite & Quartz",
   formatDetection: {
     email: false,
     address: false,
@@ -44,17 +44,17 @@ export const metadata: Metadata = {
     canonical: "/",
   },
   openGraph: {
-    title: "Premium Granite & Quartz | Luxury Stone Materials",
+    title: "New Crescent Granite & Quartz | Luxury Stone Materials",
     description:
       "Transform your space with our exquisite collection of natural granite and quartz materials. Professional stone fabrication and installation services.",
     url: "https://your-domain.com", // Replace with your actual domain
-    siteName: "Premium Granite & Quartz",
+    siteName: "New Crescent Granite & Quartz",
     images: [
       {
         url: "/granite-showroom-with-stone-samples.png",
         width: 1200,
         height: 630,
-        alt: "Premium Granite & Quartz Showroom",
+        alt: "New Crescent Granite & Quartz Showroom",
       },
     ],
     locale: "en_US",
@@ -62,7 +62,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Premium Granite & Quartz | Luxury Stone Materials",
+    title: "New Crescent Granite & Quartz | Luxury Stone Materials",
     description:
       "Transform your space with our exquisite collection of natural granite and quartz materials. Professional stone fabrication and installation services.",
     images: ["/granite-showroom-with-stone-samples.png"],

@@ -45,7 +45,7 @@ export default function AboutPage() {
               </Badge>
               <h2 className="text-3xl md:text-4xl font-bold mb-6">New Crescent Granite and Quartz Corporation</h2>
               <p className="text-muted-foreground mb-6">
-                {companyLoading ? "Loading..." : companyInfo?.about || "New Crescent Granite and Quartz Corporation is a highly reputable company based in Calgary, AB, specializing in the supply and installation of premium granite and quartz products. We offer a full range of services for granite and quartz kitchen countertops, from expert fabrication to professional installation."}
+                {companyLoading ? "Loading..." : companyInfo?.about || "New Crescent Granite and Quartz Corporation is a highly reputable company based in Calgary, AB, specializing in the supply and installation of luxury granite and quartz products. We offer a full range of services for granite and quartz kitchen countertops, from expert fabrication to professional installation."}
               </p>
               <p className="text-muted-foreground mb-6">
                 Founded by Faisal Shahzad—a skilled fabricator and installer—our company is dedicated to customer satisfaction, quality craftsmanship, and competitive pricing. Whether you’re upgrading your kitchen or starting a new project, we deliver the best price and top quality for granite and quartz countertops in Calgary.
@@ -118,7 +118,7 @@ export default function AboutPage() {
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <Badge variant="secondary" className="mb-4">Our Services</Badge>
           <h2 className="text-3xl md:text-4xl font-bold mb-6">What We Offer</h2>
-          <p className="text-muted-foreground mb-8">We supply, fabricate, and install premium granite and quartz kitchen countertops for homes and businesses in Calgary and surrounding areas. Our services include free consultation, custom design, precise fabrication, and professional installation.</p>
+          <p className="text-muted-foreground mb-8">We supply, fabricate, and install luxury granite and quartz kitchen countertops for homes and businesses in Calgary and surrounding areas. Our services include free consultation, custom design, precise fabrication, and professional installation.</p>
           <div className="flex flex-wrap justify-center gap-6">
             <Card className="w-64"><CardContent className="p-6"><div className="font-bold mb-2">Granite Countertops</div><div className="text-muted-foreground text-sm">Durable, natural stone surfaces in a variety of colors and finishes.</div></CardContent></Card>
             <Card className="w-64"><CardContent className="p-6"><div className="font-bold mb-2">Quartz Countertops</div><div className="text-muted-foreground text-sm">Engineered stone for a modern, low-maintenance look.</div></CardContent></Card>

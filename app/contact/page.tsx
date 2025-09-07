@@ -551,7 +551,7 @@ export default function ContactPage() {
           </div>
           <h2 className="text-4xl md:text-5xl font-bold mb-6">Ready to Get Started?</h2>
           <p className="text-xl mb-8 opacity-90 max-w-2xl mx-auto">
-            Schedule a free consultation and let us help bring your vision to life with our premium stone solutions.
+            Schedule a free consultation and let us help bring your vision to life with our luxury stone solutions.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button size="lg" variant="secondary" className="text-white hover:text-primary/100 hover:bg-white/40">
